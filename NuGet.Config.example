@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!-- Source NuGet officielle -->
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+
+    <!-- Source locale pour vos packages Sentry.Uno custom -->
+    <!-- Remplacez le chemin par votre dossier de packages -->
+    <add key="SentryUnoLocal" value="C:\NuGetPackages\Sentry" />
+
+    <!-- Exemple avec BaGet (serveur NuGet local) -->
+    <!-- <add key="BaGetLocal" value="http://localhost:5000/v3/index.json" /> -->
+  </packageSources>
+
+  <!-- Priorité des sources (optionnel) -->
+  <packageSourceMapping>
+    <packageSource key="nuget.org">
+      <package pattern="*" />
+    </packageSource>
+    <packageSource key="SentryUnoLocal">
+      <package pattern="Sentry*" />
+    </packageSource>
+  </packageSourceMapping>
+</configuration>
