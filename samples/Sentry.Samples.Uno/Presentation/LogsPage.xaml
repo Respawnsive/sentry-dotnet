@@ -1,0 +1,49 @@
+<Page
+    x:Class="Sentry.Samples.Uno.Presentation.LogsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sentry.Samples.Uno.Presentation"
+    xmlns:uen="using:Uno.Extensions.Navigation.UI"
+    xmlns:um="using:Uno.Material"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    Background="{ThemeResource BackgroundBrush}"
+    NavigationCacheMode="Required">
+    <ScrollViewer IsTabStop="True">
+        <Grid utu:SafeArea.Insets="VisibleBounds">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <utu:NavigationBar Content="Structured Logs" />
+
+            <StackPanel
+                Grid.Row="1"
+                Margin="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="16">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource MaterialHeadline5}"
+                    Text="Structured Logs Examples" />
+
+                <TextBlock
+                    Margin="0,8,0,16"
+                    Text="Structured logs are automatically sent to Sentry when EnableLogs=true."
+                    TextWrapping="Wrap" />
+
+                <Button x:Name="LogInformationBtn" Click="OnLogInformation" Content="Log Information (Breadcrumb)" />
+
+                <Button x:Name="LogWarningBtn" Click="OnLogWarning" Content="Log Warning (Breadcrumb)" />
+
+                <Button x:Name="LogErrorBtn" Click="OnLogError" Content="Log Error (Event)" />
+
+                <Button x:Name="LogCriticalBtn" Click="OnLogCritical" Content="Log Critical (Event)" />
+
+                <Button x:Name="LogStructuredBtn" Click="OnLogStructured" Content="Structured Log with Properties" />
+
+                <Button x:Name="LogWithExceptionBtn" Click="OnLogWithException" Content="Log with Exception" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

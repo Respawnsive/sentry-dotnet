@@ -65,6 +65,15 @@
     <ProjectReference Include="..\..\src\Sentry.Analyzers\Sentry.Analyzers.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
+    <!-- OpenTelemetry integration for tracing -->
+    <ProjectReference Include="..\..\src\Sentry.OpenTelemetry\Sentry.OpenTelemetry.csproj" />
+  </ItemGroup>
+
+  <!-- Add OpenTelemetry packages for tracing -->
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
   </ItemGroup>
 
 </Project>

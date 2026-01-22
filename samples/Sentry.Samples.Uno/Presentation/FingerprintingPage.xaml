@@ -1,0 +1,45 @@
+<Page x:Class="Sentry.Samples.Uno.Presentation.FingerprintingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Sentry.Samples.Uno.Presentation"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:um="using:Uno.Material"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <ScrollViewer IsTabStop="True">
+    <Grid utu:SafeArea.Insets="VisibleBounds">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <utu:NavigationBar Content="{Binding Title}" />
+
+      <StackPanel Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="16"
+            Margin="16">
+        <TextBlock Text="Fingerprinting Examples"
+            Style="{StaticResource MaterialHeadline5}"
+            HorizontalAlignment="Center" />
+        
+        <TextBlock Text="Fingerprinting controls how Sentry groups similar events together."
+            TextWrapping="Wrap"
+            Margin="0,8,0,16" />
+
+        <Button Content="Custom Fingerprint - Group by Exception Type"
+            Command="{Binding CustomFingerprintByType}" />
+        
+        <Button Content="Custom Fingerprint - Group by Message"
+            Command="{Binding CustomFingerprintByMessage}" />
+        
+        <Button Content="Custom Fingerprint - Multiple Values"
+            Command="{Binding CustomFingerprintMultiple}" />
+        
+        <Button Content="Default Fingerprint (Auto)"
+            Command="{Binding DefaultFingerprint}" />
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</Page>

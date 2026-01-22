@@ -16,9 +16,19 @@
       <utu:NavigationBar Content="{Binding Title}" />
 
       <StackPanel Grid.Row="1"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
-            Spacing="16">
+            Spacing="16"
+            Margin="16">
+        <TextBlock Text="Sentry Uno Platform Sample"
+            Style="{StaticResource MaterialHeadline5}"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,24" />
+        
+        <TextBlock Text="Basic Operations"
+            Style="{StaticResource MaterialSubtitle1}"
+            Margin="0,0,0,8" />
+        
         <TextBox Text="{Binding Name, Mode=TwoWay}"
             PlaceholderText="Enter your name:" />
         <Button Content="Go to Second Page"
@@ -30,6 +40,21 @@
             Command="{Binding AddBreadcrumb}" />
         <Button Content="Capture exception"
             Command="{Binding CaptureException}" />
+        
+        <TextBlock Text="Sentry Features"
+            Style="{StaticResource MaterialSubtitle1}"
+            Margin="0,24,0,8" />
+        
+        <Button Content="Fingerprinting"
+            Command="{Binding NavigateToFingerprinting}" />
+        <Button Content="Structured Logs"
+            Command="{Binding NavigateToLogs}" />
+        <Button Content="Tracing"
+            Command="{Binding NavigateToTracing}" />
+        <Button Content="Profiling"
+            Command="{Binding NavigateToProfiling}" />
+        <Button Content="User Feedback"
+            Command="{Binding NavigateToUserFeedback}" />
       </StackPanel>
     </Grid>
   </ScrollViewer>

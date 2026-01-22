@@ -21,6 +21,11 @@ public partial class MainViewModel : ObservableObject
         CaptureMessage = new RelayCommand(CaptureSentryMessage);
         AddBreadcrumb = new RelayCommand(AddSentryBreadcrumb);
         CaptureException = new RelayCommand(CaptureSentryException);
+        NavigateToFingerprinting = new AsyncRelayCommand(NavigateToFingerprintingView);
+        NavigateToLogs = new AsyncRelayCommand(async () => await _navigator.NavigateViewAsync<LogsPage>(this));
+        NavigateToTracing = new AsyncRelayCommand(NavigateToTracingView);
+        NavigateToProfiling = new AsyncRelayCommand(NavigateToProfilingView);
+        NavigateToUserFeedback = new AsyncRelayCommand(NavigateToUserFeedbackView);
     }
     public string? Title { get; }
 
@@ -28,10 +33,36 @@ public partial class MainViewModel : ObservableObject
     public ICommand CaptureMessage { get; }
     public ICommand AddBreadcrumb { get; }
     public ICommand CaptureException { get; }
+    public ICommand NavigateToFingerprinting { get; }
+    public ICommand NavigateToLogs { get; set; }
+    public ICommand NavigateToTracing { get; }
+    public ICommand NavigateToProfiling { get; }
+    public ICommand NavigateToUserFeedback { get; }
 
     private async Task GoToSecondView()
     {
         await _navigator.NavigateViewModelAsync<SecondViewModel>(this, data: new Entity(Name!));
+    }
+
+    private async Task NavigateToFingerprintingView()
+    {
+        await _navigator.NavigateViewModelAsync<FingerprintingViewModel>(this);
+    }
+
+
+    private async Task NavigateToTracingView()
+    {
+        await _navigator.NavigateViewModelAsync<TracingViewModel>(this);
+    }
+
+    private async Task NavigateToProfilingView()
+    {
+        await _navigator.NavigateViewModelAsync<ProfilingViewModel>(this);
+    }
+
+    private async Task NavigateToUserFeedbackView()
+    {
+        await _navigator.NavigateViewModelAsync<UserFeedbackViewModel>(this);
     }
 
     private static void CaptureSentryMessage()
