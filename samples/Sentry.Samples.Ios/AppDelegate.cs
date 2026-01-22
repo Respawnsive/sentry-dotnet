@@ -31,10 +31,22 @@ public class AppDelegate : UIApplicationDelegate
             options.TracesSampleRate = 1.0;
             options.ProfilesSampleRate = 1.0;
 
+#if IOS || MACCATALYST || __IOS__
             // All the native iOS SDK options are available below
             // https://docs.sentry.io/platforms/apple/guides/ios/configuration/
             // Enable Native iOS SDK App Hangs detection
             options.Native.EnableAppHangTracking = true;
+
+            options.OnCrashedLastRun = e =>
+            {
+                Console.WriteLine(e);
+            };
+#else
+            // iOS-specific options are only available when building for iOS/MacCatalyst
+            // These options require the Cocoa SDK which is only included for iOS builds.
+            // When building on Windows, these properties don't exist, so we skip them.
+            // This code will only execute when building on macOS for iOS.
+#endif
 
             options.CacheDirectoryPath = Path.GetTempPath();
 
@@ -48,11 +60,6 @@ public class AppDelegate : UIApplicationDelegate
                 evt.SetTag("dotnet-iOS-Native-Before", "Hello World");
                 return evt;
             });
-
-            options.OnCrashedLastRun = e =>
-            {
-                Console.WriteLine(e);
-            };
         });
 
         // create a new window instance based on the screen size

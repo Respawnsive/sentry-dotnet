@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0-ios18.0</TargetFramework>
-    <TargetPlatformVersion>18</TargetPlatformVersion>
+    <TargetPlatformVersion>18.0</TargetPlatformVersion>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
@@ -45,5 +45,10 @@
     <!-- <PackageReference Include="Sentry" Version="..." /> -->
     <ProjectReference Include="..\..\src\Sentry\Sentry.csproj" />
   </ItemGroup>
+
+  <!-- Skip building on Windows when iOS SDK is not available -->
+  <Target Name="SkipBuildOnWindows" BeforeTargets="Build" Condition="!$([MSBuild]::IsOSPlatform('OSX'))">
+    <Message Text="Skipping iOS sample build on Windows - iOS SDK requires macOS" Importance="high" />
+  </Target>
 
 </Project>

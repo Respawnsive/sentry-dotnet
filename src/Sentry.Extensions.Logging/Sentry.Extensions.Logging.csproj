@@ -52,6 +52,8 @@
     <InternalsVisibleTo Include="Sentry.Extensions.Logging.Tests" PublicKey="$(SentryPublicKey)" />
     <InternalsVisibleTo Include="Sentry.Maui" PublicKey="$(SentryPublicKey)" />
     <InternalsVisibleTo Include="Sentry.Maui.Tests" PublicKey="$(SentryPublicKey)" />
+    <InternalsVisibleTo Include="Sentry.Uno" PublicKey="$(SentryPublicKey)" />
+    <InternalsVisibleTo Include="Sentry.Uno.Tests" PublicKey="$(SentryPublicKey)" />
   </ItemGroup>
 
 </Project>

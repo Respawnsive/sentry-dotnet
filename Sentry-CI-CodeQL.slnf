@@ -18,6 +18,7 @@
       "src\\Sentry.Log4Net\\Sentry.Log4Net.csproj",
       "src\\Sentry.Maui.CommunityToolkit.Mvvm\\Sentry.Maui.CommunityToolkit.Mvvm.csproj",
       "src\\Sentry.Maui\\Sentry.Maui.csproj",
+      "src\\Sentry.Uno\\Sentry.Uno.csproj",
       "src\\Sentry.NLog\\Sentry.NLog.csproj",
       "src\\Sentry.OpenTelemetry\\Sentry.OpenTelemetry.csproj",
       "src\\Sentry.Profiling\\Sentry.Profiling.csproj",

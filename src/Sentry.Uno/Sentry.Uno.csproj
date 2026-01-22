@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Official Uno Platform integration for Sentry - Open-source error tracking that helps developers monitor and fix crashes in real time.</Description>
+    <!--
+      Target netX.0 so we can run unit tests on platform-neutral code.
+      Target other platforms so we can include platform-specific code.
+    -->
+    <TargetFrameworks>$(LatestTfm);$(PreviousTfm)</TargetFrameworks>
+    <TargetFrameworks Condition="'$(NO_ANDROID)' == ''">$(TargetFrameworks);$(LatestAndroidTfm);$(PreviousAndroidTfm)</TargetFrameworks>
+    <TargetFrameworks Condition="'$(NO_IOS)' == '' And $([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);$(LatestIosTfm);$(PreviousIosTfm)</TargetFrameworks>
+    <!-- Windows TFM excluded by default to avoid Windows App SDK dependency issues.
+         Set NO_WINDOWS=false to include it if you have Windows App SDK tools installed. -->
+    <TargetFrameworks Condition="'$(NO_WINDOWS)' == 'false' And !$([MSBuild]::IsOSPlatform('Linux'))">$(TargetFrameworks);$(PreviousWindowsTfm)</TargetFrameworks>
+
+    <!-- We'll need to package this only for builds including mobile targets. -->
+    <IsPackable Condition="'$(NO_MOBILE)' == 'true'">false</IsPackable>
+
+    <UnoWinUIVersion>6.4.229</UnoWinUIVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetPlatformIdentifier)' == 'windows'">
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sentry.Extensions.Logging\Sentry.Extensions.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10'))">
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetPlatformIdentifier)' != ''">
+    <PackageReference Include="Uno.WinUI" Version="$(UnoWinUIVersion)" />
+  </ItemGroup>
+
+  <!-- Align AndroidX Lifecycle packages with Uno.WinUI transitive versions to avoid NU1608/NU1605 -->
+  <ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'android' And $(TargetFramework.StartsWith('net10'))">
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.9.2.1" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.9.2.1" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.9.2.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'android' And $(TargetFramework.StartsWith('net9'))">
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.8.7.2" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.8.7.2" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.8.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sentry.Uno.Tests" PublicKey="$(SentryPublicKey)" />
+  </ItemGroup>
+
+</Project>

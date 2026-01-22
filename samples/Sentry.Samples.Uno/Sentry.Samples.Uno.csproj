@@ -1,0 +1,70 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-desktop</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+    <Nullable>enable</Nullable>
+
+    <!-- Display name -->
+    <ApplicationTitle>Sentry.Samples.Uno</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.respawnsive.sentry.samples.uno</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>JérômeLiger</ApplicationPublisher>
+    <!-- Package Description -->
+    <Description>Sentry.Samples.Uno powered by Uno Platform.</Description>
+
+    <!--
+      UnoFeatures are used to quickly add and manage features enabled for your app.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      Material;
+      Dsp;
+      Hosting;
+      Toolkit;
+      Logging;
+      Mvvm;
+      Configuration;
+      Http;
+      Serialization;
+      Navigation;
+      ThemeService;
+      SkiaRenderer;
+    </UnoFeatures>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-desktop'">
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <!-- iOS linker configuration -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
+    <!-- iOS requires PublishTrimmed=true, but we can disable trimming for all assemblies in Debug using MtouchLink=None -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <!-- Disable trimming for all assemblies in Debug to avoid FileNotFoundException issues -->
+    <MtouchLink Condition="'$(Configuration)' == 'Debug'">None</MtouchLink>
+    <!-- Use SdkOnly linker in Release (less aggressive than Full) -->
+    <MtouchLink Condition="'$(Configuration)' != 'Debug'">SdkOnly</MtouchLink>
+  </PropertyGroup>
+
+  <!-- Preserve Microsoft.Extensions.Http assembly for iOS linker when trimming is enabled -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios' And '$(Configuration)' != 'Debug'">
+    <TrimmerRootAssembly Include="Microsoft.Extensions.Http" />
+    <!-- Also preserve related Microsoft.Extensions assemblies -->
+    <TrimmerRootAssembly Include="Microsoft.Extensions.Http.Abstractions" />
+    <TrimmerRootAssembly Include="Microsoft.Extensions.Options" />
+    <TrimmerRootAssembly Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sentry.Uno\Sentry.Uno.csproj" />
+    <ProjectReference Include="..\..\src\Sentry.Analyzers\Sentry.Analyzers.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>
