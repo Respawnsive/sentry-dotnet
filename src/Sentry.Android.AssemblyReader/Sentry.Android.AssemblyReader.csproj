@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(PreviousTfm);$(LatestTfm)</TargetFrameworks>
     <Description>.NET assembly reader for Android</Description>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

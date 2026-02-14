@@ -17,9 +17,8 @@
   <!-- Platform-specific props included here -->
   <Import Project="Platforms\Android\Sentry.Android.props" Condition="'$(TargetPlatformIdentifier)' == 'android'" />
   <Import Project="Platforms\Cocoa\Sentry.Cocoa.props" Condition="'$(TargetPlatformIdentifier)' == 'ios' Or '$(TargetPlatformIdentifier)' == 'maccatalyst'" />
-  <Import Project="Platforms\Native\Sentry.Native.targets"
-        Condition="'$(TargetPlatformIdentifier)' != 'android' and '$(TargetPlatformIdentifier)' != 'ios' and '$(TargetPlatformIdentifier)' != 'maccatalyst'"/>
-  <Import Project="Platforms\Unity\Sentry.Unity.props" Condition="'$(SolutionName)' == 'Sentry.Unity'"/>
+  <Import Project="Platforms\Native\Sentry.Native.targets" Condition="'$(TargetPlatformIdentifier)' != 'android' and '$(TargetPlatformIdentifier)' != 'ios' and '$(TargetPlatformIdentifier)' != 'maccatalyst'" />
+  <Import Project="Platforms\Unity\Sentry.Unity.props" Condition="'$(SolutionName)' == 'Sentry.Unity'" />
 
   <PropertyGroup Condition="'$(EnableAot)' == 'true'">
     <IsAotCompatible>true</IsAotCompatible>
@@ -185,14 +184,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sentry.Compiler.Extensions\Sentry.Compiler.Extensions.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false"
-                      PrivateAssets="all" />
+    <ProjectReference Include="..\Sentry.Compiler.Extensions\Sentry.Compiler.Extensions.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
   </ItemGroup>
 
   <PropertyGroup>
     <BeforePack>$(BeforePack);PackSentryCompilerExtensions</BeforePack>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <Target Name="PackSentryCompilerExtensions">

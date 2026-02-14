@@ -97,6 +97,8 @@ if (-not $SkipNativeBuild) {
 
 # Ordre de packaging (dépendances d'abord)
 $projectsToPack = @(
+    @{ Name = "Sentry.Android.AssemblyReader"; Path = "src\Sentry.Android.AssemblyReader\Sentry.Android.AssemblyReader.csproj" },
+    @{ Name = "Sentry.Bindings.Android"; Path = "src\Sentry.Bindings.Android\Sentry.Bindings.Android.csproj" },
     @{ Name = "Sentry"; Path = "src\Sentry\Sentry.csproj" },
     @{ Name = "Sentry.Extensions.Logging"; Path = "src\Sentry.Extensions.Logging\Sentry.Extensions.Logging.csproj" },
     @{ Name = "Sentry.Uno"; Path = "src\Sentry.Uno\Sentry.Uno.csproj" }

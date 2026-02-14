@@ -11,14 +11,15 @@
     <!-- Skip warnings about including Microsoft.Maui.Controls... that should be done from the application -->
     <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
     <RootNamespace>Sentry.Maui.CommunityToolkit.Mvvm</RootNamespace>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2"/>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sentry.Maui\Sentry.Maui.csproj"/>
+    <ProjectReference Include="..\Sentry.Maui\Sentry.Maui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

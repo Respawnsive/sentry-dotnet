@@ -22,6 +22,7 @@
 
     <!-- Disable parallel builds to avoid Maven cache conflicts: https://github.com/getsentry/sentry-dotnet/issues/4689 -->
     <BuildInParallel>false</BuildInParallel>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <!-- Use a separate readme, and don't add the changelog to the nuget. -->
@@ -90,17 +91,9 @@
 
   <Target Name="DownloadSentryAndroidSdk" BeforeTargets="CollectPackageReferences">
     <!-- The native-ndk exists outside of the android-ndk now. We're downloading the POM file to get the version of the native-ndk. -->
-    <DownloadFile
-      SourceUrl="https://repo1.maven.org/maven2/io/sentry/sentry-android-ndk/$(SentryAndroidSdkVersion)/sentry-android-ndk-$(SentryAndroidSdkVersion).pom"
-      DestinationFolder="$(SentryAndroidSdkDirectory)"
-      Condition="!Exists('$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom')"
-      Retries="3"
-    />
+    <DownloadFile SourceUrl="https://repo1.maven.org/maven2/io/sentry/sentry-android-ndk/$(SentryAndroidSdkVersion)/sentry-android-ndk-$(SentryAndroidSdkVersion).pom" DestinationFolder="$(SentryAndroidSdkDirectory)" Condition="!Exists('$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom')" Retries="3" />
 
-    <XmlPeek
-      XmlInputPath="$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom"
-      Query="//*[local-name()='dependency' and .//*[local-name()='artifactId' and text()='sentry-native-ndk']]/*[local-name()='version']/text()"
-      Condition="Exists('$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom')">
+    <XmlPeek XmlInputPath="$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom" Query="//*[local-name()='dependency' and .//*[local-name()='artifactId' and text()='sentry-native-ndk']]/*[local-name()='version']/text()" Condition="Exists('$(SentryAndroidSdkDirectory)sentry-android-ndk-$(SentryAndroidSdkVersion).pom')">
       <Output TaskParameter="Result" PropertyName="SentryNativeNdkVersion" />
     </XmlPeek>
 
@@ -109,5 +102,5 @@
     </ItemGroup>
   </Target>
 
-  <UsingTask TaskName="XmlPeek" AssemblyName="Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+  <UsingTask TaskName="XmlPeek" AssemblyName="Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
 </Project>

@@ -6,14 +6,14 @@
     <!--Generate xml docs for all projects under 'src'-->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <Authors>Sentry Team and Contributors</Authors>
-    <Company>Sentry.io</Company>
-    <Product>Sentry</Product>
+    <Authors>Respawnsive fork from Sentry Team and Contributors</Authors>
+    <Company>Respawnsive</Company>
+    <Product>SentryUno</Product>
 
-    <PackageTags>Sentry;GetSentry;Error-Reporting;Crash-Reporting;Exception-Handling</PackageTags>
+    <PackageTags>Sentry;Uno;UnoPlatform;GetSentry;Error-Reporting;Crash-Reporting;Exception-Handling</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
-    <RepositoryUrl>https://github.com/getsentry/sentry-dotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Respawnsive/sentry-dotnet</RepositoryUrl>
 
     <PackageIcon>sentry-nuget.png</PackageIcon>
     <PackageProjectUrl>https://sentry.io</PackageProjectUrl>

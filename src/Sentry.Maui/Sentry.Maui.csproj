@@ -30,6 +30,7 @@
 
     <!-- Skip warnings about including Microsoft.Maui.Controls... that should be done from the application -->
     <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
 
   </PropertyGroup>
 

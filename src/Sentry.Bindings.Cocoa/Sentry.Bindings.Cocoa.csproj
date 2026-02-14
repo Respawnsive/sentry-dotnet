@@ -15,6 +15,7 @@
     <SentryCocoaBindingInputs>../../modules/sentry-cocoa.properties;../../scripts/generate-cocoa-bindings.ps1;$(SentryCocoaFrameworkHeaders)**/*.h</SentryCocoaBindingInputs>
     <!-- SentrySpan.g.cs: error CS0108: 'ISentrySpan.Serialize()' hides inherited member 'ISentrySerializable.Serialize()'. Use the new keyword if hiding was intended -->
     <NoWarn>$(NoWarn);CS0108</NoWarn>
+    <AssemblyName>Rsp.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <!-- Override values for local Cocoa SDK builds -->
@@ -57,60 +58,43 @@
   </ItemGroup>
 
   <!-- Downloads and sets up the Cocoa SDK: dotnet msbuild /t:setupCocoaSDK src/Sentry.Bindings.Cocoa/Sentry.Bindings.Cocoa.csproj -->
-  <Target Name="_DownloadCocoaSDK"
-          Condition="$([MSBuild]::IsOSPlatform('OSX')) And !Exists('$(SentryCocoaCache).git') And !Exists('$(SentryCocoaFramework)')">
+  <Target Name="_DownloadCocoaSDK" Condition="$([MSBuild]::IsOSPlatform('OSX')) And !Exists('$(SentryCocoaCache).git') And !Exists('$(SentryCocoaFramework)')">
 
     <Message Importance="High" Text="Setting up the Cocoa SDK version '$(SentryCocoaVersion)'." />
 
     <!-- Clean cache if version does not exist to get rid of old versions -->
-    <RemoveDir
-      Condition="!Exists('$(SentryCocoaFramework).zip')"
-      Directories="$(SentryCocoaCache)" />
+    <RemoveDir Condition="!Exists('$(SentryCocoaFramework).zip')" Directories="$(SentryCocoaCache)" />
 
     <!-- Create cache directory -->
     <MakeDir Condition="!Exists('$(SentryCocoaCache)')" Directories="$(SentryCocoaCache)" />
 
     <!-- Download the Cocoa SDK as pre-built .xcframework -->
-    <Exec
-      Condition="!Exists('$(SentryCocoaFramework).zip')"
-      Command="curl -L https://github.com/getsentry/sentry-cocoa/releases/download/$(SentryCocoaVersion)/Sentry-Dynamic.xcframework.zip -o $(SentryCocoaFramework).zip" />
+    <Exec Condition="!Exists('$(SentryCocoaFramework).zip')" Command="curl -L https://github.com/getsentry/sentry-cocoa/releases/download/$(SentryCocoaVersion)/Sentry-Dynamic.xcframework.zip -o $(SentryCocoaFramework).zip" />
 
-    <Exec
-      Condition="Exists('$(SentryCocoaFramework).zip') and !Exists('$(SentryCocoaFramework)')"
-      Command="unzip -o $(SentryCocoaFramework).zip -d $(SentryCocoaCache) &amp;&amp; mv $(SentryCocoaCache)Sentry-Dynamic.xcframework $(SentryCocoaFramework)" />
+    <Exec Condition="Exists('$(SentryCocoaFramework).zip') and !Exists('$(SentryCocoaFramework)')" Command="unzip -o $(SentryCocoaFramework).zip -d $(SentryCocoaCache) &amp;&amp; mv $(SentryCocoaCache)Sentry-Dynamic.xcframework $(SentryCocoaFramework)" />
 
     <!-- Make a copy of the header files before we butcher these to suite objective sharpie -->
     <MakeDir Directories="$(SentryCocoaFrameworkHeaders)" />
     <ItemGroup>
       <FilesToCopy Include="$(SentryCocoaFramework)\ios-arm64\Sentry.framework\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(FilesToCopy)"
-          DestinationFolder="$(SentryCocoaFrameworkHeaders)%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SentryCocoaFrameworkHeaders)%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
 
   <!-- Build the Sentry Cocoa SDK from source -->
-  <Target Name="_BuildCocoaSDK"
-          Condition="$([MSBuild]::IsOSPlatform('OSX')) And Exists('$(SentryCocoaCache).git')"
-          Inputs="..\..\modules\sentry-cocoa\.git\HEAD;..\..\scripts\build-sentry-cocoa.sh" Outputs="..\..\modules\sentry-cocoa\Carthage\.built-from-sha">
+  <Target Name="_BuildCocoaSDK" Condition="$([MSBuild]::IsOSPlatform('OSX')) And Exists('$(SentryCocoaCache).git')" Inputs="..\..\modules\sentry-cocoa\.git\HEAD;..\..\scripts\build-sentry-cocoa.sh" Outputs="..\..\modules\sentry-cocoa\Carthage\.built-from-sha">
 
     <Message Importance="High" Text="Building the Cocoa SDK from source." />
     <Exec Command="bash ../../scripts/build-sentry-cocoa.sh" IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
   <!-- Choose between download and build -->
-  <Target Name="_SetupCocoaSDK"
-          DependsOnTargets="_DownloadCocoaSDK;_BuildCocoaSDK;_GenerateSentryCocoaBindings;SanitizeSentryCocoaFramework"
-          Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+  <Target Name="_SetupCocoaSDK" DependsOnTargets="_DownloadCocoaSDK;_BuildCocoaSDK;_GenerateSentryCocoaBindings;SanitizeSentryCocoaFramework" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
 
   <!-- Setup exactly once: https://learn.microsoft.com/visualstudio/msbuild/run-target-exactly-once -->
-  <Target Name="SetupCocoaSDKBeforeOuterBuild" DependsOnTargets="_SetupCocoaSDK"
-          Condition="$([MSBuild]::IsOSPlatform('OSX'))"
-          BeforeTargets="DispatchToInnerBuilds" />
+  <Target Name="SetupCocoaSDKBeforeOuterBuild" DependsOnTargets="_SetupCocoaSDK" Condition="$([MSBuild]::IsOSPlatform('OSX'))" BeforeTargets="DispatchToInnerBuilds" />
 
-  <Target Name="SetupCocoaSDK"
-          BeforeTargets="BeforeBuild"
-          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+  <Target Name="SetupCocoaSDK" BeforeTargets="BeforeBuild" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
     <!-- Setup exactly once: https://learn.microsoft.com/visualstudio/msbuild/run-target-exactly-once -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_SetupCocoaSDK" RemoveProperties="TargetFramework" />
   </Target>
@@ -120,10 +104,7 @@
   </Target>
 
   <!-- Generate bindings -->
-  <Target Name="_GenerateSentryCocoaBindings"
-          Condition="$([MSBuild]::IsOSPlatform('OSX'))"
-          Inputs="$(SentryCocoaBindingInputs)"
-          Outputs="ApiDefinitions.cs;StructsAndEnums.cs">
+  <Target Name="_GenerateSentryCocoaBindings" Condition="$([MSBuild]::IsOSPlatform('OSX'))" Inputs="$(SentryCocoaBindingInputs)" Outputs="ApiDefinitions.cs;StructsAndEnums.cs">
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="_InnerGenerateSentryCocoaBindings" Properties="TargetFramework=once" />
   </Target>
   <Target Name="_InnerGenerateSentryCocoaBindings">
@@ -133,23 +114,18 @@
   </Target>
 
   <!-- Sanitize the xcframework before NativeReference resolution and packing -->
-  <Target Name="SanitizeSentryCocoaFramework"
-          Condition="$([MSBuild]::IsOSPlatform('OSX')) and Exists('$(SentryCocoaFramework)')">
+  <Target Name="SanitizeSentryCocoaFramework" Condition="$([MSBuild]::IsOSPlatform('OSX')) and Exists('$(SentryCocoaFramework)')">
     <Message Importance="High" Text="Sanitizing $(SentryCocoaFramework): removing dSYMs, Headers, Modules, PrivateHeaders (including symlinks)." />
     <Exec Command="find &quot;$(SentryCocoaFramework)&quot; -depth \( -name dSYMs -o -name Headers -o -name Modules -o -name PrivateHeaders \) -exec echo Removing {} \; -exec rm -rf {} + 2&gt;/dev/null || true" />
   </Target>
 
   <!-- Workaround for https://github.com/xamarin/xamarin-macios/issues/15299 -->
-  <Target Name="_SetGeneratedSupportDelegatesInternal" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
-    Inputs="$(GeneratedSourcesDir)SupportDelegates.g.cs" Outputs="$(GeneratedSourcesDir)SupportDelegates.g.cs.stamp">
+  <Target Name="_SetGeneratedSupportDelegatesInternal" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))" Inputs="$(GeneratedSourcesDir)SupportDelegates.g.cs" Outputs="$(GeneratedSourcesDir)SupportDelegates.g.cs.stamp">
     <PropertyGroup>
       <GeneratedSupportDelegatesFile>$(GeneratedSourcesDir)SupportDelegates.g.cs</GeneratedSupportDelegatesFile>
     </PropertyGroup>
     <Message Text="Patching $(MSBuildThisFileDirectory)$(GeneratedSupportDelegatesFile)" Importance="High" />
-    <WriteLinesToFile
-      File="$(GeneratedSupportDelegatesFile)"
-      Lines="$([System.IO.File]::ReadAllText($(GeneratedSupportDelegatesFile)).Replace('public delegate','internal delegate'))"
-      Overwrite="true" />
+    <WriteLinesToFile File="$(GeneratedSupportDelegatesFile)" Lines="$([System.IO.File]::ReadAllText($(GeneratedSupportDelegatesFile)).Replace('public delegate','internal delegate'))" Overwrite="true" />
     <Touch Files="$(GeneratedSupportDelegatesFile).stamp" AlwaysCreate="true" />
   </Target>
 
